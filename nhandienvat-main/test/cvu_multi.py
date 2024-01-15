@@ -4,7 +4,7 @@ from components import *
 from ultis import *
 from copy import deepcopy
 from API_flask import create_app
-import csv
+import os
 import time
 import threading
 # import keyboard
@@ -56,17 +56,15 @@ def cvu_process():
       intensity_of_template_gray = np.sum(copy_of_template_gray == 0)
       findCenter_type = 0
       good_points = []
-      print(similarScore)
-      print(method)
-      print(configScore)
-      print(outputImgLink)
+      if not os.path.exists(outputImgLink):
+           os.makedirs(outputImgLink)
       try:
-            len_obj,object_item = proposal_box_yolo(imgLink,modelLink,img_size,configScore)#object_item sẽ gồm list thông tin góc và tọa độ của đường bao
+            len_obj,object_item = proposal_box_yolo(imgLink,modelLink,img_size,configScore,outputImgLink,csvLink)#object_item sẽ gồm list thông tin góc và tọa độ của đường bao
             print("length: ",len_obj)
-            if object_item == None:
-                 extractCSV(csv_file_path,result,score)
-                 cv2.imwrite("Output.jpg",img)
-                 return []
+            # if object_item == None:
+            #      extractCSV(csv_file_path,result,score)
+            #      cv2.imwrite("Output.jpg",img)
+            #      return []
             for angle,bboxes,_ in object_item:
                 #   print("------------------------------------------------------------")
                   result_queue = []
@@ -110,14 +108,16 @@ def cvu_process():
                   cv2.line(img,(center_obj[0],center_obj[1] ),(x2,y2),(255,0,255),2)
                   cv2.line(img,(center_obj[0],center_obj[1] ),(x3,y3),(255,255,0),2)
             print("good point arr: ",good_points)
+            outputImgLink = outputImgLink + '/output.jpg'
             cv2.imwrite(outputImgLink,img)
-            cv2.imwrite("outputimg.jpg" ,img)
-            csv_file_path = csvLink
+            # cv2.imwrite(outputImgLink,img)
+            # cv2.imwrite("outputimg.jpg" ,img)
+            
             # create_homography()
         
             result,score = convert_point(good_points,homographyLink)
             if len(result) != 0:     
-                  extractCSV(csv_file_path,result,score)
+                  extractCSV(csvLink,result,score)
                   result = result.tolist()
                   result.insert(0,[len_obj])
                   result.insert(0,[len(good_points)])
@@ -127,12 +127,13 @@ def cvu_process():
             # return []
 
       except Exception as e:
-           csv_file_path = csvLink
            result = [[0,0,0,0]]
            score = []
-           extractCSV(csv_file_path,result,score)
-           cv2.imwrite("Output.jpg",img)
+           extractCSV(csvLink,result,score)
+           outputImgLink = outputImgLink + '/output.jpg'
            cv2.imwrite(outputImgLink,img)
+      #      cv2.imwrite("Output.jpg",img)
+      #      cv2.imwrite(outputImgLink,img)
            print("System error: ", e)
            return []
 

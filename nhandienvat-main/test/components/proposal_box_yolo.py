@@ -1,6 +1,8 @@
 import numpy as np
 from ultis.apply_min_area import apply_min_area
+from ultis.extractCSV import extractCSV
 from ultralytics import YOLO
+import cv2
 
 class YOLOSegmentation:
     def __init__(self,model):
@@ -48,7 +50,7 @@ class YOLOSegmentation:
     
         
 
-def proposal_box_yolo(img,model,image_size,configScore):
+def proposal_box_yolo(img,model,image_size,configScore,outputImgLink,csvLink):
     
     ys = YOLOSegmentation(model)
     try:
@@ -66,6 +68,11 @@ def proposal_box_yolo(img,model,image_size,configScore):
         return len_obj,list(zip(angle_test, xywh_boxes,number_items))
     except Exception as e:
         print("Yolo detection error or no detection: ",e)
+        result = [[0,0,0,0]]
+        score = []
+        outputImgLink = outputImgLink + '/output.jpg'
+        cv2.imwrite(outputImgLink,img)
+        extractCSV(csvLink,result,score)
         
         
     

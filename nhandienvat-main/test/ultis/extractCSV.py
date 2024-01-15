@@ -1,6 +1,7 @@
 import csv
 import numpy as np
 def extractCSV(csv_file_path,result,score):
+    csv_file_path = csv_file_path + "/result.csv"
     # result_csv = result + score
     # print("treasdfd: ",result)
     with open(csv_file_path, mode='w', newline='') as file:
