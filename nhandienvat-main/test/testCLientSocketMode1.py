@@ -4,7 +4,7 @@ import struct
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # Kết nối đến server
-host = '192.168.1.10'
+host = '192.168.100.60'
 port = 48951
 
 client_socket.connect((host, port))

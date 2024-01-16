@@ -7,8 +7,6 @@ import cv2
 class YOLOSegmentation:
     def __init__(self,model):
         self.model =YOLO(model)  # load a custom model
-        
-
     def predict(self,img,img_size,configScore):
 
         #Thực hiện nhận diện
@@ -72,17 +70,18 @@ def proposal_box_yolo(img,model,image_size,configScore,outputImgLink,csvLink):
 def proposal_box_yolo_get_total(img,model,image_size,configScore,outputImgLink):
     ys = YOLOSegmentation(model)
     try:
-        bboxes,masks,class_ids, score,len_obj = ys.predict(img,image_size, configScore)
-        obj,_ = ys.filter_boxes(bboxes,masks,class_ids,score)
-        angle_test = ys.create_angle(obj[1])
-        xywh_boxes = ys.convert_xywh(obj[0])
-        number_items = np.full(len(xywh_boxes),len(obj[0]),dtype=float)
+        _,_,_, _,len_obj = ys.predict(img,image_size, configScore)
+        # obj,_ = ys.filter_boxes(bboxes,masks,class_ids,score)
+        # angle_test = ys.create_angle(obj[1])
+        # xywh_boxes = ys.convert_xywh(obj[0])
+        # number_items = np.full(len(xywh_boxes),len(obj[0]),dtype=float)
         
-        return len_obj,list(zip(angle_test, xywh_boxes,number_items))
+        return len_obj
     except Exception as e:
         print("Yolo detection error or no detection: ",e)
         outputImgLink = outputImgLink + '/output.jpg'
         cv2.imwrite(outputImgLink,img)    
+        # return []
 
     
 

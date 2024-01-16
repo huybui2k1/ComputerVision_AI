@@ -60,7 +60,7 @@ def cvu_process():
            os.makedirs(outputImgLink)
       try:
             len_obj,object_item = proposal_box_yolo(imgLink,modelLink,img_size,configScore,outputImgLink,csvLink)#object_item sẽ gồm list thông tin góc và tọa độ của đường bao
-            print("length: ",len_obj)
+            # print("length: ",len_obj)
             # if object_item == None:
             #      extractCSV(csv_file_path,result,score)
             #      cv2.imwrite("Output.jpg",img)
@@ -88,16 +88,16 @@ def cvu_process():
                   center_obj, possible_grasp_ratio =  result_queue[0]
                   
                   if center_obj[0] == None and center_obj[1] == None or center_obj == None:
-                        print("no center!")
+                        # print("no center!")
                         continue       
                   if center_obj[0] < 800.0 or center_obj[0] > 2750.0:
-                       print("out range!")
+                  #      print("out range!")
                        continue   
                   if center_obj[1] < 100.0 or center_obj[1] > 1950.0:
-                       print("out range!")
+                  #      print("out range!")
                        continue  
                   if possible_grasp_ratio < similarScore:
-                        print("score small than",similarScore)
+                        # print("score small than",similarScore)
                         continue
                   good_points.append([center_obj,bestAngle,possible_grasp_ratio])
                   # Viết chữ lên hình ảnh
@@ -155,20 +155,23 @@ def get_total():
       #/////////Begin process/////////////////
       imgLink = imgLink.replace('\\', '/')     
       try:
-            len_obj,object_item = proposal_box_yolo_get_total(imgLink,modelLink,img_size,configScore,outputImgLink)#object_item sẽ gồm list thông tin góc và tọa độ của đường bao
+            len_obj = proposal_box_yolo_get_total(imgLink,modelLink,img_size,configScore,outputImgLink)#object_item sẽ gồm list thông tin góc và tọa độ của đường bao
             img = cv2.imread(imgLink)
             outputImgLink = outputImgLink + '/output.jpg'
             cv2.imwrite(outputImgLink,img)  
-            print("length: ",len_obj)
+            # print("length: ",len_obj)
             result = []
             result.append(len_obj)
             print("time process: ",time.time() - start_time)
-            return [result]
+            if result[0] == None:
+              return []
+            else:
+              return [result]
             # return []
 
       except Exception as e:
            print("System error: ", e)
-           return []
+      #      return []
 
 if __name__ == "__main__":
      app.run()

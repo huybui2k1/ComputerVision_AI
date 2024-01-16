@@ -100,20 +100,20 @@ def find_center2_test(gray_img,bboxes, low_clip,high_clip,intensity_of_template_
                 radius = int(radius) 
 
                 if M["m00"] != 0:
-                    print("here!!")
+                    # print("here!!")
                     cX = int(M["m10"] / M["m00"])
                     cY = int(M['m01'] / M["m00"])
                     cx, cy = cX + x1, cY + y1
                     compareX,compareY = abs(center[0]-cx), abs(center[1]-cy)
-                    print("sdsad: ",compareX,compareY )
+                    # print("sdsad: ",compareX,compareY )
                     if compareX < 25 and compareY < 25:
                         center_obj = (center[0],center[1])
                         cv2.circle(gray_img,center,radius,(0,255,0),1) 
                         cv2.circle(gray_img,center,1,(255,255,0),3) 
                         cv2.circle(gray_img, (cx, cy), 5, (255, 255, 255), -1)
-                        cv2.imwrite("conbocuoi.jpg",gray_img)
+                        # cv2.imwrite("conbocuoi.jpg",gray_img)
                     else:
-                        print("incorrect center!")
+                        # print("incorrect center!")
                         break
                 else:
                     # center_obj = (cx, cy)
