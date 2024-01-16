@@ -6,7 +6,7 @@ def extractCSV(csv_file_path,result,score):
     # print("treasdfd: ",result)
     with open(csv_file_path, mode='w', newline='') as file:
         # Sử dụng DictWriter để ghi dữ liệu theo dạng từ điển
-        csv_writer = csv.DictWriter(file, fieldnames=[ 'X', 'Y', 'Angle', 'Possible' ])
+        csv_writer = csv.DictWriter(file, fieldnames=[ 'X', 'Y', 'Angle' ])
         
         # Viết tiêu đề cho các cột
         csv_writer.writeheader()

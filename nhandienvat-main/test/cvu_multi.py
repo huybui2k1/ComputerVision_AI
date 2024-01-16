@@ -113,11 +113,12 @@ def cvu_process():
             # create_homography()
         
             result,score = convert_point(good_points,homographyLink)
+            extractCSV(csvLink,result,score)
             if len(result) != 0:     
                   result = result.tolist()
                   result.insert(0,[len_obj])
                   result.insert(0,[len(good_points)])
-            extractCSV(csvLink,result,score)
+            
             print("result: ", result)
             print("time process: ",time.time() - start_time)
             return result
