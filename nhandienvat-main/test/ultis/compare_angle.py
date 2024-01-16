@@ -108,7 +108,7 @@ def compare_angle_test(point,minus_sub_angles,plus_sub_angles, gray_img, templat
             bestAngle = angle
         if bestAngle > 270:
             bestAngle = (180 - (360- bestAngle))
-        print("best angle - point: ",bestAngle,bestPoint)
+        # print("best angle - point: ",bestAngle,bestPoint)
         # transfer angle of 6-axis to angle of tool
         if bestAngle >= 90:
             bestAngle = bestAngle - 90

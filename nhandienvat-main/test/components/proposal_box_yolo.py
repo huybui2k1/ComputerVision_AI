@@ -12,7 +12,7 @@ class YOLOSegmentation:
     def predict(self,img,img_size,configScore):
 
         #Thực hiện nhận diện
-        pred_img = self.model(img, save=True, conf=configScore, imgsz=img_size)
+        pred_img = self.model(img, save=False, conf=configScore, imgsz=img_size)
         #lấy danh sách các bounding box
         bboxes = np.array(pred_img[0].boxes.xyxy, dtype="int")
         len_obj=len(bboxes)
@@ -55,16 +55,11 @@ def proposal_box_yolo(img,model,image_size,configScore,outputImgLink,csvLink):
     ys = YOLOSegmentation(model)
     try:
         bboxes,masks,class_ids, score,len_obj = ys.predict(img,image_size, configScore)
-        # print("just say hello!")
         obj,_ = ys.filter_boxes(bboxes,masks,class_ids,score)
-        # print("dodai conhang: ", len(obj[0]))
         # tính toán góc xoay dựa vào các điểm masks(obj[1] là list các điểm masks đúng)
         angle_test = ys.create_angle(obj[1])
-        # print(" conhang: ", angle_test)
-        # print("angle: ",angle_test)
         xywh_boxes = ys.convert_xywh(obj[0])
         number_items = np.full(len(xywh_boxes),len(obj[0]),dtype=float)
-        # print("number_items",number_items)
         return len_obj,list(zip(angle_test, xywh_boxes,number_items))
     except Exception as e:
         print("Yolo detection error or no detection: ",e)
@@ -73,7 +68,21 @@ def proposal_box_yolo(img,model,image_size,configScore,outputImgLink,csvLink):
         outputImgLink = outputImgLink + '/output.jpg'
         cv2.imwrite(outputImgLink,img)
         extractCSV(csvLink,result,score)
+
+def proposal_box_yolo_get_total(img,model,image_size,configScore,outputImgLink):
+    ys = YOLOSegmentation(model)
+    try:
+        bboxes,masks,class_ids, score,len_obj = ys.predict(img,image_size, configScore)
+        obj,_ = ys.filter_boxes(bboxes,masks,class_ids,score)
+        angle_test = ys.create_angle(obj[1])
+        xywh_boxes = ys.convert_xywh(obj[0])
+        number_items = np.full(len(xywh_boxes),len(obj[0]),dtype=float)
         
-        
+        return len_obj,list(zip(angle_test, xywh_boxes,number_items))
+    except Exception as e:
+        print("Yolo detection error or no detection: ",e)
+        outputImgLink = outputImgLink + '/output.jpg'
+        cv2.imwrite(outputImgLink,img)    
+
     
 

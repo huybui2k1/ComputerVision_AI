@@ -107,20 +107,17 @@ def cvu_process():
                   x3, y3 = int(center_obj[0] + 80* np.cos(np.radians(-bestAngle)) ),int(center_obj[1]  + 80* np.sin(np.radians(-bestAngle)) )
                   cv2.line(img,(center_obj[0],center_obj[1] ),(x2,y2),(255,0,255),2)
                   cv2.line(img,(center_obj[0],center_obj[1] ),(x3,y3),(255,255,0),2)
-            print("good point arr: ",good_points)
+            # print("good point arr: ",good_points)
             outputImgLink = outputImgLink + '/output.jpg'
-            cv2.imwrite(outputImgLink,img)
-            # cv2.imwrite(outputImgLink,img)
-            # cv2.imwrite("outputimg.jpg" ,img)
-            
+            cv2.imwrite(outputImgLink,img)     
             # create_homography()
         
             result,score = convert_point(good_points,homographyLink)
             if len(result) != 0:     
-                  extractCSV(csvLink,result,score)
                   result = result.tolist()
                   result.insert(0,[len_obj])
                   result.insert(0,[len(good_points)])
+            extractCSV(csvLink,result,score)
             print("result: ", result)
             print("time process: ",time.time() - start_time)
             return result
@@ -149,6 +146,7 @@ def get_total():
             img_size = int(request.form.get('img_size'))
             imgLink = request.form.get('imgLink')
             modelLink = request.form.get('modelLink')
+            outputImgLink = request.form.get('outputImgLink')
       except Exception as e:
             logger.error(f'{e}\n')
             return f'{e}\n'
@@ -156,9 +154,10 @@ def get_total():
       #/////////Begin process/////////////////
       imgLink = imgLink.replace('\\', '/')     
       try:
-            len_obj,object_item = proposal_box_yolo(imgLink,modelLink,img_size,configScore)#object_item sẽ gồm list thông tin góc và tọa độ của đường bao
+            len_obj,object_item = proposal_box_yolo_get_total(imgLink,modelLink,img_size,configScore,outputImgLink)#object_item sẽ gồm list thông tin góc và tọa độ của đường bao
             img = cv2.imread(imgLink)
-            cv2.imwrite("Output.jpg",img)
+            outputImgLink = outputImgLink + '/output.jpg'
+            cv2.imwrite(outputImgLink,img)  
             print("length: ",len_obj)
             result = []
             result.append(len_obj)
@@ -169,9 +168,6 @@ def get_total():
       except Exception as e:
            print("System error: ", e)
            return []
-      print(configScore)
-      print(imgLink)
-      print(img_size) 
 
 if __name__ == "__main__":
      app.run()
