@@ -3,6 +3,17 @@ from ultis.apply_min_area import apply_min_area
 from ultis.extractCSV import extractCSV
 from ultralytics import YOLO
 import cv2
+import time
+
+class YOLODetect:
+    def __init__(self,model):
+        self.model = YOLO(model)
+    def predict(self,img):
+        pred_img = self.model(img)
+        print("length: ",len(pred_img[0].boxes.xywh))
+        length = len(pred_img[0].boxes.xywh)
+        return length
+
 
 class YOLOSegmentation:
     def __init__(self,model):
@@ -67,21 +78,35 @@ def proposal_box_yolo(img,model,image_size,configScore,outputImgLink,csvLink):
         cv2.imwrite(outputImgLink,img)
         extractCSV(csvLink,result,score)
 
-def proposal_box_yolo_get_total(img,model,image_size,configScore,outputImgLink):
-    ys = YOLOSegmentation(model)
-    try:
-        _,_,_, _,len_obj = ys.predict(img,image_size, configScore)
-        # obj,_ = ys.filter_boxes(bboxes,masks,class_ids,score)
-        # angle_test = ys.create_angle(obj[1])
-        # xywh_boxes = ys.convert_xywh(obj[0])
-        # number_items = np.full(len(xywh_boxes),len(obj[0]),dtype=float)
+# def proposal_box_yolo_get_total(img,model,image_size,configScore,outputImgLink):
+#     ys = YOLOSegmentation(model)
+#     try:
+#         _,_,_, _,len_obj = ys.predict(img,image_size, configScore)
+#         # obj,_ = ys.filter_boxes(bboxes,masks,class_ids,score)
+#         # angle_test = ys.create_angle(obj[1])
+#         # xywh_boxes = ys.convert_xywh(obj[0])
+#         # number_items = np.full(len(xywh_boxes),len(obj[0]),dtype=float)
         
+#         return len_obj
+#     except Exception as e:
+#         print("Yolo detection error or no detection: ",e)
+#         outputImgLink = outputImgLink + '/output.jpg'
+#         cv2.imwrite(outputImgLink,img)    
+#         # return []
+
+    
+
+def proposal_box_yolo_get_total(img,model,image_size,configScore,outputImgLink):
+    try:
+        start_time = time.time()
+        ys = YOLODetect(model)
+        len_obj = ys.predict(img)
+        print("time process: ",time.time() - start_time)
         return len_obj
+        
     except Exception as e:
         print("Yolo detection error or no detection: ",e)
         outputImgLink = outputImgLink + '/output.jpg'
         cv2.imwrite(outputImgLink,img)    
         # return []
-
     
-

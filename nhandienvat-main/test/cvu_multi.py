@@ -138,7 +138,7 @@ def cvu_process():
 @app.route('/get_total', methods=['GET','POST'])
 def get_total():
 
-  start_time = time.time()
+ 
 # /////////Input////////////////////
   if request.method == "POST":
       try:      
@@ -162,7 +162,7 @@ def get_total():
             # print("length: ",len_obj)
             result = []
             result.append(len_obj)
-            print("time process: ",time.time() - start_time)
+            
             if result[0] == None:
               return []
             else:
