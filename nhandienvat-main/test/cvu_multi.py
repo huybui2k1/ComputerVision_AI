@@ -163,6 +163,8 @@ def get_total():
             result = []
             result.append(len_obj)
             
+
+            
             if result[0] == None:
               return []
             else:
@@ -174,7 +176,7 @@ def get_total():
       #      return []
 
 if __name__ == "__main__":
-     app.run()
+     app.run(debug = True)
 
 
 
