@@ -7,7 +7,8 @@ import time
 
 class YOLODetect:
     def __init__(self,model):
-        self.model = YOLO(model)
+        # self.model = YOLO(model)
+        self.model =model
     def predict(self,img):
         pred_img = self.model(img)
         print("length: ",len(pred_img[0].boxes.xywh))
@@ -17,7 +18,7 @@ class YOLODetect:
 
 class YOLOSegmentation:
     def __init__(self,model):
-        self.model =YOLO(model)  # load a custom model
+        self.model =model # load a custom model
     def predict(self,img,img_size,configScore):
 
         #Thực hiện nhận diện
@@ -101,7 +102,7 @@ def proposal_box_yolo_get_total(img,model,image_size,configScore,outputImgLink):
         start_time = time.time()
         ys = YOLODetect(model)
         len_obj = ys.predict(img)
-        print("time process: ",time.time() - start_time)
+        # print("time process: ",time.time() - start_time)
         return len_obj
         
     except Exception as e:

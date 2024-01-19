@@ -13,6 +13,12 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 app = create_app()
 
+model_total = YOLO(r'E:\DATN\SOURCE_CODE_SYSTEM\File_Code_Ver3\nhandienvat-main1201\nhandienvat-main\test\train_sl-20240117T041016Z-001\train_sl\last.pt')
+results_total = model_total(r"E:\DATN\File_Anh\Train16h15_120124\31201927_01_12_19_10_09_101.jpg")
+model_get_value = YOLO(r"E:\\DATN\\Zip_File\\con_lon_nhua-20240116T012741Z-001\\con_lon_nhua\\last.pt")
+results_value = model_get_value(r"E:\DATN\File_Anh\Train16h15_120124\31201927_01_12_16_23_35_617.jpg")
+print("------------------Run model Success----------------------")
+
 @app.route('/cvu_process', methods=['GET','POST'])
 def cvu_process():
 
@@ -59,7 +65,7 @@ def cvu_process():
       if not os.path.exists(outputImgLink):
            os.makedirs(outputImgLink)
       try:
-            len_obj,object_item = proposal_box_yolo(imgLink,modelLink,img_size,configScore,outputImgLink,csvLink)#object_item sẽ gồm list thông tin góc và tọa độ của đường bao
+            len_obj,object_item = proposal_box_yolo(imgLink,model_get_value,img_size,configScore,outputImgLink,csvLink)#object_item sẽ gồm list thông tin góc và tọa độ của đường bao
             # print("length: ",len_obj)
             # if object_item == None:
             #      extractCSV(csv_file_path,result,score)
@@ -118,6 +124,8 @@ def cvu_process():
                   result = result.tolist()
                   result.insert(0,[len_obj])
                   result.insert(0,[len(good_points)])
+                  time_process = time.time() - start_time
+                  result.insert(2,[time_process])
             
             print("result: ", result)
             print("time process: ",time.time() - start_time)
@@ -138,9 +146,9 @@ def cvu_process():
 @app.route('/get_total', methods=['GET','POST'])
 def get_total():
 
- 
 # /////////Input////////////////////
   if request.method == "POST":
+      start_time = time.time()
       try:      
             #///Form data
             configScore = float(request.form.get('configScore'))
@@ -155,16 +163,16 @@ def get_total():
       #/////////Begin process/////////////////
       imgLink = imgLink.replace('\\', '/')     
       try:
-            len_obj = proposal_box_yolo_get_total(imgLink,modelLink,img_size,configScore,outputImgLink)#object_item sẽ gồm list thông tin góc và tọa độ của đường bao
+            len_obj = proposal_box_yolo_get_total(imgLink,model_total,img_size,configScore,outputImgLink)#object_item sẽ gồm list thông tin góc và tọa độ của đường bao
             img = cv2.imread(imgLink)
             outputImgLink = outputImgLink + '/output.jpg'
             cv2.imwrite(outputImgLink,img)  
             # print("length: ",len_obj)
             result = []
             result.append(len_obj)
-            
-
-            
+            time_process = time.time() - start_time
+            result.insert(1,time_process)
+            print("huy can thoi gian: ",result)
             if result[0] == None:
               return []
             else:

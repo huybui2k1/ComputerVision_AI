@@ -26,8 +26,8 @@ while True:
      data_receive = data_receive + data
     #  received_number = int.from_bytes(data, byteorder='big')
     #  print('Dữ liệu nhận được từ server:', data_receive.decode('utf-8'))
-     print('Dữ liệu nhận được từ server:', data)
-
+     print('Dữ liệu nhận được từ server:', data_receive)
+     
      break
 
 # print(f"Mảng nhận được từ server: {received_array}")

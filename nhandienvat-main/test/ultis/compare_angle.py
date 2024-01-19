@@ -101,8 +101,8 @@ def compare_angle_test(point,minus_sub_angles,plus_sub_angles, gray_img, templat
                     bestAngle = exactly_plus
                     bestPoint = point_plus
                 high_point_plus = point_plus
-            minus_pointer = minus_pointer + 1
-            plus_pointer = plus_pointer + 1
+            minus_pointer = minus_pointer + 2
+            plus_pointer = plus_pointer + 2
             # print("---------------------------------------")
         if bestPoint < point:
             bestAngle = angle
